@@ -11,16 +11,16 @@ import retrofit2.http.POST
 import retrofit2.http.Path
 
 interface RawMaterialApiService {
-    @GET("raw-materials")
-    suspend fun getMaterials(): Response<List<RawMaterial>>
+ @GET("raw-materials")
+ suspend fun getMaterials(): Response<List<RawMaterial>>
 
-    @POST("raw-materials")
-    suspend fun createMaterial(
-        @Body request: CreateRawMaterialRequest
-    ): Response<CreateRawMaterialResponse>
+ @POST("raw-materials")
+ suspend fun createMaterial(
+ @Body request: CreateRawMaterialRequest
+ ): Response<CreateRawMaterialResponse>
 
-    @DELETE("raw-materials/{id}")
-    suspend fun deleteMaterial(
-        @Path("id") id: Int
-    ): Response<Map<String, String>>
+ @DELETE("raw-materials/{id}")
+ suspend fun deleteMaterial(
+ @Path("id") id: Int
+ ): Response<Map<String, String>>
 }

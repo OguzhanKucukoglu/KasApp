@@ -6,11 +6,11 @@ import App from './App'
 import './index.css'
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
-  <React.StrictMode>
-    <ConfigProvider locale={trTR} theme={{ token: { colorPrimary: '#1890ff' } }}>
-      <AntApp>
-        <App />
-      </AntApp>
-    </ConfigProvider>
-  </React.StrictMode>,
+ <React.StrictMode>
+ <ConfigProvider locale={trTR} theme={{ token: { colorPrimary: '#1890ff' } }}>
+ <AntApp>
+ <App />
+ </AntApp>
+ </ConfigProvider>
+ </React.StrictMode>,
 )

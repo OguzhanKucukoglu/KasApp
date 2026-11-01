@@ -11,17 +11,17 @@ import retrofit2.http.POST
 import retrofit2.http.Path
 
 interface ButcheryApiService {
-    @GET("butchery")
-    suspend fun getOperations(): Response<List<ButcheryRecord>>
+ @GET("butchery")
+ suspend fun getOperations(): Response<List<ButcheryRecord>>
 
-    @GET("butchery/parts/available")
-    suspend fun getAvailableParts(): Response<List<com.avatar.app.data.model.AvailablePart>>
+ @GET("butchery/parts/available")
+ suspend fun getAvailableParts(): Response<List<com.avatar.app.data.model.AvailablePart>>
 
-    @GET("butchery/{id}")
-    suspend fun getOperationById(@Path("id") id: Int): Response<ButcheryDetailResponse>
+ @GET("butchery/{id}")
+ suspend fun getOperationById(@Path("id") id: Int): Response<ButcheryDetailResponse>
 
-    @POST("butchery")
-    suspend fun createOperation(
-        @Body request: CreateButcheryRequest
-    ): Response<CreateButcheryResponse>
+ @POST("butchery")
+ suspend fun createOperation(
+ @Body request: CreateButcheryRequest
+ ): Response<CreateButcheryResponse>
 }

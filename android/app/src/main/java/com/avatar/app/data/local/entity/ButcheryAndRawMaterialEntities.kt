@@ -5,32 +5,32 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "butchery_operations")
 data class ButcheryOperationEntity(
-    @PrimaryKey val id: Int,
-    val animalType: String,
-    val animalEarTag: String?,
-    val operationDate: String,
-    val inputWeightKg: Double,
-    val totalOutputKg: Double,
-    val wasteKg: Double,
-    val totalCost: Double,
-    val unitCostInput: Double?,
-    val distributionMethod: String,
-    val currency: String,
-    val notes: String?
+ @PrimaryKey val id: Int,
+ val animalType: String,
+ val animalEarTag: String?,
+ val operationDate: String,
+ val inputWeightKg: Double,
+ val totalOutputKg: Double,
+ val wasteKg: Double,
+ val totalCost: Double,
+ val unitCostInput: Double?,
+ val distributionMethod: String,
+ val currency: String,
+ val notes: String?
 )
 
 @Entity(tableName = "raw_materials")
 data class RawMaterialEntity(
-    @PrimaryKey val id: Int,
-    val lotId: Int? = null,
-    val materialType: String,
-    val quantity: Double,
-    val unit: String,
-    val unitPrice: Double,
-    val totalCost: Double,
-    val currency: String,
-    val lotNumber: String?,
-    val lotStatus: String,
-    val expiryDate: String? = null,
-    val createdAt: String?
+ @PrimaryKey val id: Int,
+ val lotId: Int? = null,
+ val materialType: String,
+ val quantity: Double,
+ val unit: String,
+ val unitPrice: Double,
+ val totalCost: Double,
+ val currency: String,
+ val lotNumber: String?,
+ val lotStatus: String,
+ val expiryDate: String? = null,
+ val createdAt: String?
 )

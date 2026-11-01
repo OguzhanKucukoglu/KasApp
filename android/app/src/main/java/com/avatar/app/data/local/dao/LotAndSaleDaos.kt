@@ -7,30 +7,30 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface LotDao {
-    @Query("SELECT * FROM lots ORDER BY id DESC")
-    fun getAllLotsFlow(): Flow<List<LotEntity>>
+ @Query("SELECT * FROM lots ORDER BY id DESC")
+ fun getAllLotsFlow(): Flow<List<LotEntity>>
 
-    @Query("SELECT * FROM lots WHERE id = :id")
-    suspend fun getLotById(id: Int): LotEntity?
+ @Query("SELECT * FROM lots WHERE id = :id")
+ suspend fun getLotById(id: Int): LotEntity?
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertLots(lots: List<LotEntity>)
+ @Insert(onConflict = OnConflictStrategy.REPLACE)
+ suspend fun insertLots(lots: List<LotEntity>)
 
-    @Query("UPDATE lots SET quantity = :newQty, status = :newStatus WHERE id = :lotId")
-    suspend fun updateLotQuantity(lotId: Int, newQty: Double, newStatus: String)
+ @Query("UPDATE lots SET quantity = :newQty, status = :newStatus WHERE id = :lotId")
+ suspend fun updateLotQuantity(lotId: Int, newQty: Double, newStatus: String)
 
-    @Query("DELETE FROM lots")
-    suspend fun clearLots()
+ @Query("DELETE FROM lots")
+ suspend fun clearLots()
 }
 
 @Dao
 interface SaleDao {
-    @Query("SELECT * FROM sales ORDER BY id DESC")
-    fun getAllSalesFlow(): Flow<List<SaleEntity>>
+ @Query("SELECT * FROM sales ORDER BY id DESC")
+ fun getAllSalesFlow(): Flow<List<SaleEntity>>
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertSale(sale: SaleEntity): Long
+ @Insert(onConflict = OnConflictStrategy.REPLACE)
+ suspend fun insertSale(sale: SaleEntity): Long
 
-    @Query("DELETE FROM sales")
-    suspend fun clearSales()
+ @Query("DELETE FROM sales")
+ suspend fun clearSales()
 }

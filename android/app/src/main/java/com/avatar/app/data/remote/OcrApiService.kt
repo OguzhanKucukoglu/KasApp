@@ -7,8 +7,8 @@ import retrofit2.http.Body
 import retrofit2.http.POST
 
 interface OcrApiService {
-    @POST("ocr/analyze")
-    suspend fun analyze(
-        @Body request: OcrAnalyzeRequest
-    ): Response<OcrAnalyzeResponse>
+ @POST("ocr/analyze")
+ suspend fun analyze(
+ @Body request: OcrAnalyzeRequest
+ ): Response<OcrAnalyzeResponse>
 }

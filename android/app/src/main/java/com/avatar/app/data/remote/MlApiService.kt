@@ -9,13 +9,13 @@ import retrofit2.http.Body
 import retrofit2.http.POST
 
 interface MlApiService {
-    @POST("ml/predict/butchery")
-    suspend fun predictButchery(
-        @Body request: ButcheryPredictRequest
-    ): Response<MLButcheryResult>
+ @POST("ml/predict/butchery")
+ suspend fun predictButchery(
+ @Body request: ButcheryPredictRequest
+ ): Response<MLButcheryResult>
 
-    @POST("ml/predict/production")
-    suspend fun predictProduction(
-        @Body request: ProductionPredictRequest
-    ): Response<MLProductionResult>
+ @POST("ml/predict/production")
+ suspend fun predictProduction(
+ @Body request: ProductionPredictRequest
+ ): Response<MLProductionResult>
 }

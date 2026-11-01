@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { ConfigProvider, App as AntApp } from 'antd';
 import { useAuthStore } from './store/authStore';
 import MainLayout from './components/layout/MainLayout';
 import LoginPage from './pages/auth/LoginPage';
@@ -28,49 +29,64 @@ function PrivateRoute({ children }: { children: React.ReactNode }) {
   return isAuthenticated ? <>{children}</> : <Navigate to="/login" replace />;
 }
 
+const kasAppTheme = {
+  token: {
+    colorPrimary: '#3E5902',
+    colorInfo: '#8DE8F2',
+    colorSuccess: '#5A7302',
+    colorBgLayout: '#F2F2F2',
+    colorTextHeading: '#274001',
+    borderRadius: 8,
+  },
+};
+
 export default function App() {
   return (
     <LanguageProvider>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/login"    element={<LoginPage />} />
-          <Route path="/register" element={<RegisterPage />} />
-          <Route
-            path="/"
-            element={
-              <PrivateRoute>
-                <MainLayout />
-              </PrivateRoute>
-            }
-          >
-            <Route index                           element={<DashboardPage />} />
-            {/* İşletme */}
-            <Route path="butchery"                 element={<ButcheryPage />} />
-            <Route path="raw-materials"            element={<RawMaterialsPage />} />
-            <Route path="orders"                   element={<OrdersPage />} />
-            <Route path="producer-listings"        element={<ProducerListingsPage />} />
-            <Route path="farmer-listings"          element={<FarmerListingsPage />} />
-            <Route path="sales"                    element={<FarmerSalesPage />} />
-            {/* Üretici */}
-            <Route path="producer-listings-manage" element={<ProducerListingsManagePage />} />
-            <Route path="production"               element={<ProductionPage />} />
-            <Route path="producer-orders"          element={<ProducerOrdersPage />} />
-            <Route path="sucukcu/production"       element={<ProductionPage />} />
-            <Route path="sucukcu/producer-orders"  element={<ProducerOrdersPage />} />
-            {/* Market */}
-            <Route path="market-listings"          element={<MarketListingsPage />} />
-            <Route path="purchases"                element={<PurchasesPage />} />
-            {/* Ortak */}
-            <Route path="lots"                     element={<LotsPage />} />
-            <Route path="lots/:id/trace"           element={<LotTracePage />} />
-            <Route path="recalls"                  element={<RecallPage />} />
-            <Route path="reports"                  element={<ReportsPage />} />
-            <Route path="invoices"                 element={<InvoicesPage />} />
-            {/* Yönetici */}
-            <Route path="admin/users"              element={<AdminUsersPage />} />
-          </Route>
-        </Routes>
-      </BrowserRouter>
+      <ConfigProvider theme={kasAppTheme}>
+        <AntApp>
+          <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+            <Routes>
+              <Route path="/login" element={<LoginPage />} />
+              <Route path="/register" element={<RegisterPage />} />
+              <Route
+                path="/"
+                element={
+                  <PrivateRoute>
+                    <MainLayout />
+                  </PrivateRoute>
+                }
+              >
+                <Route index element={<DashboardPage />} />
+                {/* İşletme */}
+                <Route path="butchery" element={<ButcheryPage />} />
+                <Route path="raw-materials" element={<RawMaterialsPage />} />
+                <Route path="orders" element={<OrdersPage />} />
+                <Route path="producer-listings" element={<ProducerListingsPage />} />
+                <Route path="farmer-listings" element={<FarmerListingsPage />} />
+                <Route path="sales" element={<FarmerSalesPage />} />
+                {/* Üretici */}
+                <Route path="producer-listings-manage" element={<ProducerListingsManagePage />} />
+                <Route path="production" element={<ProductionPage />} />
+                <Route path="producer-orders" element={<ProducerOrdersPage />} />
+                <Route path="sucukcu/production" element={<ProductionPage />} />
+                <Route path="sucukcu/producer-orders" element={<ProducerOrdersPage />} />
+                {/* Market */}
+                <Route path="market-listings" element={<MarketListingsPage />} />
+                <Route path="purchases" element={<PurchasesPage />} />
+                {/* Ortak */}
+                <Route path="lots" element={<LotsPage />} />
+                <Route path="lots/:id/trace" element={<LotTracePage />} />
+                <Route path="recalls" element={<RecallPage />} />
+                <Route path="reports" element={<ReportsPage />} />
+                <Route path="invoices" element={<InvoicesPage />} />
+                {/* Yönetici */}
+                <Route path="admin/users" element={<AdminUsersPage />} />
+              </Route>
+            </Routes>
+          </BrowserRouter>
+        </AntApp>
+      </ConfigProvider>
     </LanguageProvider>
   );
 }

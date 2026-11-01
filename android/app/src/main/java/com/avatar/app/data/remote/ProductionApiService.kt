@@ -11,15 +11,15 @@ import retrofit2.http.PATCH
 import retrofit2.http.Path
 
 interface ProductionApiService {
-    @GET("production")
-    suspend fun getProductionOrders(): Response<List<ProductionOrder>>
+ @GET("production")
+ suspend fun getProductionOrders(): Response<List<ProductionOrder>>
 
-    @GET("production/{id}")
-    suspend fun getProductionById(@Path("id") id: Int): Response<ProductionDetailResponse>
+ @GET("production/{id}")
+ suspend fun getProductionById(@Path("id") id: Int): Response<ProductionDetailResponse>
 
-    @PATCH("production/{id}/complete")
-    suspend fun completeProduction(
-        @Path("id") id: Int,
-        @Body request: CompleteProductionRequest
-    ): Response<ProductionCompletionResult>
+ @PATCH("production/{id}/complete")
+ suspend fun completeProduction(
+ @Path("id") id: Int,
+ @Body request: CompleteProductionRequest
+ ): Response<ProductionCompletionResult>
 }

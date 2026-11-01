@@ -12,19 +12,19 @@ import retrofit2.http.POST
 import retrofit2.http.Path
 
 interface RecallApiService {
-    @GET("recalls")
-    suspend fun getRecalls(): Response<List<RecallItem>>
+ @GET("recalls")
+ suspend fun getRecalls(): Response<List<RecallItem>>
 
-    @GET("recalls/recallable-lots")
-    suspend fun getRecallableLots(): Response<List<LotItem>>
+ @GET("recalls/recallable-lots")
+ suspend fun getRecallableLots(): Response<List<LotItem>>
 
-    @POST("recalls")
-    suspend fun initiateRecall(
-        @Body request: CreateRecallRequest
-    ): Response<CreateRecallResponse>
+ @POST("recalls")
+ suspend fun initiateRecall(
+ @Body request: CreateRecallRequest
+ ): Response<CreateRecallResponse>
 
-    @PATCH("recalls/{id}/complete")
-    suspend fun completeRecall(
-        @Path("id") id: Int
-    ): Response<Map<String, String>>
+ @PATCH("recalls/{id}/complete")
+ suspend fun completeRecall(
+ @Path("id") id: Int
+ ): Response<Map<String, String>>
 }

@@ -43,3 +43,15 @@ mysql_data/
 # OS
 .DS_Store
 Thumbs.db
+
+# Android & Gradle
+.gradle/
+*/.gradle/
+*.iml
+local.properties
+android/local.properties
+captures/
+.externalNativeBuild/
+.cxx/
+android/app/build/
+android/build/

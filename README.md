@@ -1,4 +1,4 @@
-# AVATAR — Akıllı Gıda Tedarik Zinciri, Maliyet Muhasebesi (EKP), Satış ve Lot İzlenebilirlik Platformu
+# Akıllı Gıda Tedarik Zinciri, Maliyet Muhasebesi (EKP), Satış ve Lot İzlenebilirlik Platformu
 
 AVATAR platformu; hayvancı (işletme), fason sucuk üreticisi ve perakendeci (market) paydaşları arasındaki hammadde takibi, parçalama, fason üretim, EKP (Eşdeğer Kalite Puanlı) maliyet muhasebesi, e-fatura/belge yönetimi, iki yönlü lot izlenebilirliği, acil ürün geri çağırma (recall) ve yapay zeka destekli verim tahmin/doğrulama süreçlerini uçtan uca yöneten kurumsal bir platformdur.
 
@@ -31,16 +31,6 @@ docker-compose up -d --build
 * 🤖 **Yapay Zeka Servisi (FastAPI):** [http://localhost:8000](http://localhost:8000) *(Swagger Docs: `/docs`)*
 * 🗄️ **MySQL Veritabanı:** `localhost:3306`
 * 🐬 **phpMyAdmin (Opsiyonel):** [http://localhost:8080](http://localhost:8080)
-
----
-
-## 👥 Roller ve Demo Giriş Bilgileri
-
-| Rol | E-Posta | Varsayılan Şifre | Görev & Yetkiler |
-|---|---|---|---|
-| **Hayvancı (İşletme)** | `samet@gmail.com` | `password123` | Parçalama, hammadde stoğu, sucukçuya sipariş verme, toptan satış, lot & recall yönetimi |
-| **Fason Üretici (Sucukçu)** | `ahmet@gmail.com` | `password123` | Hizmet ilanı açma, sipariş onaylama, üretim tamamlama, fason hizmet faturası kesme |
-| **Perakendeci (Market)** | `eren@gmail.com` | `password123` | İlanlardan mamul sucuk satın alma, satış faturası görüntüleme/PDF, kalite/sorun bildirimi |
 
 ---
 

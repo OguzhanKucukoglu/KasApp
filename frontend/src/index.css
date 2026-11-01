@@ -6,9 +6,84 @@
 
 body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  background-color: #f0f2f5;
+  background-color: #F4F5F2;
+  background-image: linear-gradient(rgba(244, 245, 242, 0.42), rgba(244, 245, 242, 0.50)), url('/pattern_bg.jpg');
+  background-repeat: repeat;
+  background-size: 340px;
+  background-attachment: fixed;
 }
 
 #root {
   min-height: 100vh;
+}
+
+/* Dashboard Module Tile Bright Green Glow Hover */
+.dashboard-module-tile {
+  transition: all 0.22s ease-in-out !important;
+  border: 1.5px solid #E5E7EB !important;
+  background: #FFFFFF !important;
+  border-radius: 14px !important;
+}
+
+.dashboard-module-tile:hover {
+  border-color: #39D353 !important;
+  box-shadow: 0 0 0 3.5px rgba(57, 211, 83, 0.50), 0 10px 25px rgba(57, 211, 83, 0.22) !important;
+  transform: translateY(-3px) !important;
+}
+
+/* Global Ant Design Tag Transparent Background with Colored Outline */
+.ant-tag {
+  background: transparent !important;
+  border-width: 1px !important;
+  border-style: solid !important;
+}
+
+.ant-tag-blue {
+  border-color: #1677ff !important;
+  color: #1677ff !important;
+}
+
+.ant-tag-green, .ant-tag-success {
+  border-color: #52c41a !important;
+  color: #389e0d !important;
+}
+
+.ant-tag-cyan {
+  border-color: #13c2c2 !important;
+  color: #08979c !important;
+}
+
+.ant-tag-purple {
+  border-color: #722ed1 !important;
+  color: #722ed1 !important;
+}
+
+.ant-tag-orange, .ant-tag-warning {
+  border-color: #fa8c16 !important;
+  color: #d46b08 !important;
+}
+
+.ant-tag-volcano, .ant-tag-red, .ant-tag-error {
+  border-color: #ff4d4f !important;
+  color: #cf1322 !important;
+}
+
+.ant-tag-gold {
+  border-color: #faad14 !important;
+  color: #d48806 !important;
+}
+
+.ant-tag-magenta {
+  border-color: #eb2f96 !important;
+  color: #eb2f96 !important;
+}
+
+.ant-tag-geekblue {
+  border-color: #2f54eb !important;
+  color: #2f54eb !important;
+}
+
+.ant-tag-default {
+  border-color: #d9d9d9 !important;
+  color: #595959 !important;
 }

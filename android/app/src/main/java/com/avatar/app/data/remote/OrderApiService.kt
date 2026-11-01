@@ -12,20 +12,20 @@ import retrofit2.http.POST
 import retrofit2.http.Path
 
 interface OrderApiService {
-    @GET("orders")
-    suspend fun getOrders(): Response<List<Order>>
+ @GET("orders")
+ suspend fun getOrders(): Response<List<Order>>
 
-    @GET("orders/{id}")
-    suspend fun getOrderById(@Path("id") id: Int): Response<OrderDetailResponse>
+ @GET("orders/{id}")
+ suspend fun getOrderById(@Path("id") id: Int): Response<OrderDetailResponse>
 
-    @POST("orders")
-    suspend fun createOrder(
-        @Body request: CreateOrderRequest
-    ): Response<Map<String, Any>>
+ @POST("orders")
+ suspend fun createOrder(
+ @Body request: CreateOrderRequest
+ ): Response<Map<String, Any>>
 
-    @PATCH("orders/{id}/status")
-    suspend fun updateOrderStatus(
-        @Path("id") id: Int,
-        @Body request: UpdateOrderStatusRequest
-    ): Response<Map<String, Any>>
+ @PATCH("orders/{id}/status")
+ suspend fun updateOrderStatus(
+ @Path("id") id: Int,
+ @Body request: UpdateOrderStatusRequest
+ ): Response<Map<String, Any>>
 }

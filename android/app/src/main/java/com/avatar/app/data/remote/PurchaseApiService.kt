@@ -7,19 +7,19 @@ import retrofit2.http.GET
 import retrofit2.http.POST
 
 interface PurchaseApiService {
-    @GET("purchases")
-    suspend fun getPurchases(): Response<List<MarketPurchaseItem>>
+ @GET("purchases")
+ suspend fun getPurchases(): Response<List<MarketPurchaseItem>>
 
-    @POST("purchases")
-    suspend fun createPurchase(
-        @Body request: CreatePurchaseRequest
-    ): Response<Map<String, Any>>
+ @POST("purchases")
+ suspend fun createPurchase(
+ @Body request: CreatePurchaseRequest
+ ): Response<Map<String, Any>>
 
-    @GET("purchases/complaints")
-    suspend fun getComplaints(): Response<List<ComplaintItem>>
+ @GET("purchases/complaints")
+ suspend fun getComplaints(): Response<List<ComplaintItem>>
 
-    @POST("purchases/feedback")
-    suspend fun submitFeedback(
-        @Body request: SubmitFeedbackRequest
-    ): Response<Map<String, Any>>
+ @POST("purchases/feedback")
+ suspend fun submitFeedback(
+ @Body request: SubmitFeedbackRequest
+ ): Response<Map<String, Any>>
 }

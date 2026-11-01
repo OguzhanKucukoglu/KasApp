@@ -1,203 +1,156 @@
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState } from 'react';
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
-import { Layout, Menu, Avatar, Dropdown, Badge, Typography, Space, Popover, List, Button, Tag } from 'antd';
+import { Layout, Avatar, Dropdown, Badge, Typography, Space, Popover, List, Button, Tag } from 'antd';
 import {
-  DashboardOutlined, ScissorOutlined, ShoppingCartOutlined,
-  UnorderedListOutlined, TagsOutlined, ForkOutlined, BellOutlined,
-  LogoutOutlined, UserOutlined, WarningOutlined, AuditOutlined, InboxOutlined,
-  CheckCircleOutlined, DollarCircleOutlined, BarChartOutlined, FileTextOutlined,
-  TeamOutlined, NotificationOutlined, SafetyCertificateOutlined,
+  BellOutlined, UserOutlined, LogoutOutlined,
+  AppstoreOutlined, ShopOutlined, ArrowLeftOutlined,
 } from '@ant-design/icons';
-import dayjs from 'dayjs';
 import { useAuthStore } from '../../store/authStore';
 import { notificationService } from '../../services/api';
-import { useTranslation, LanguageSwitcher } from '../../i18n';
-
-const { Header, Sider, Content } = Layout;
-const { Text } = Typography;
-
 interface NotificationItem {
   id: number;
-  user_id: number;
   type: string;
   title: string;
   message: string;
-  reference_type?: string;
-  reference_id?: number;
   is_read: boolean | number;
-  created_at: string;
 }
+import { useTranslation, LanguageSwitcher } from '../../i18n';
+
+const { Header, Content } = Layout;
+const { Text } = Typography;
 
 const roleColors: Record<string, string> = {
-  hayvanci: '#52c41a',
-  sucukcu:  '#1890ff',
-  market:   '#fa8c16',
-  admin:    '#722ed1',
+  admin: '#722ed1',
+  hayvanci: '#3E5902',
+  sucukcu: '#5A7302',
+  market: '#8DE8F2',
 };
 
 export default function MainLayout() {
-  const { user, logout } = useAuthStore();
   const { t } = useTranslation();
+  const { user, logout } = useAuthStore();
   const navigate = useNavigate();
   const location = useLocation();
 
   const [notifications, setNotifications] = useState<NotificationItem[]>([]);
-  const [unreadCount, setUnreadCount]     = useState(0);
-  const [popoverOpen, setPopoverOpen]     = useState(false);
-
-  const fetchNotifications = useCallback(async () => {
-    try {
-      const { data } = await notificationService.getAll();
-      setNotifications(data.notifications || []);
-      setUnreadCount(Number(data.unreadCount || 0));
-    } catch {
-      // sessizce geç
-    }
-  }, []);
+  const [unreadCount, setUnreadCount] = useState(0);
+  const [popoverOpen, setPopoverOpen] = useState(false);
 
   useEffect(() => {
-    fetchNotifications();
-    const interval = setInterval(fetchNotifications, 12000);
+    loadNotifications();
+    const interval = setInterval(loadNotifications, 30000);
     return () => clearInterval(interval);
-  }, [fetchNotifications]);
+  }, []);
 
-  async function handleMarkRead(n: NotificationItem) {
-    if (!n.is_read) {
-      try {
-        await notificationService.markRead(n.id);
-        fetchNotifications();
-      } catch {
-        // ignore
-      }
+  async function loadNotifications() {
+    try {
+      const { data } = await notificationService.getAll();
+      setNotifications(data);
+      setUnreadCount(data.filter((n: NotificationItem) => !n.is_read).length);
+    } catch {
+      // sessizce geç
     }
   }
 
   async function handleMarkAllRead() {
     try {
       await notificationService.markAll();
-      fetchNotifications();
+      setNotifications(prev => prev.map(n => ({ ...n, is_read: 1 })));
+      setUnreadCount(0);
     } catch {
-      // ignore
+      // sessizce geç
     }
   }
 
-  const menuItems = getMenuItems(user?.role || '', t);
+  async function handleNotificationClick(item: NotificationItem) {
+    if (!item.is_read) {
+      try {
+        await notificationService.markRead(item.id);
+        setNotifications(prev => prev.map(n => n.id === item.id ? { ...n, is_read: 1 } : n));
+        setUnreadCount(prev => Math.max(0, prev - 1));
+      } catch {
+        // sessizce geç
+      }
+    }
+
+    if (item.type === 'recall' || item.type === 'quality_alert') {
+      setPopoverOpen(false);
+      navigate('/recalls');
+    }
+  }
 
   const userMenu = [
-    { key: 'logout', icon: <LogoutOutlined />, label: t('nav.logout'), onClick: () => { logout(); navigate('/login'); } },
+    {
+      key: 'user-info',
+      disabled: true,
+      label: (
+        <div style={{ padding: '4px 0' }}>
+          <Text strong style={{ display: 'block', color: '#274001' }}>{user?.name}</Text>
+          <Text type="secondary" style={{ fontSize: 12 }}>{user?.email}</Text>
+        </div>
+      ),
+    },
+    { type: 'divider' as const },
+    {
+      key: 'dashboard',
+      icon: <AppstoreOutlined />,
+      label: 'Dashboard',
+      onClick: () => navigate('/'),
+    },
+    {
+      key: 'logout',
+      icon: <LogoutOutlined />,
+      danger: true,
+      label: t('nav.logout'),
+      onClick: () => {
+        logout();
+        navigate('/login');
+      },
+    },
   ];
 
   const notificationContent = (
-    <div style={{ width: 360, maxHeight: 420, display: 'flex', flexDirection: 'column' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12, paddingBottom: 8, borderBottom: '1px solid #f0f0f0' }}>
-        <Text strong style={{ fontSize: 14 }}>
-          {t('nav.notifications')} {unreadCount > 0 && <Tag color="red">{unreadCount} {t('nav.newNotifications')}</Tag>}
-        </Text>
+    <div style={{ width: 340, maxHeight: 420, display: 'flex', flexDirection: 'column' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8, paddingBottom: 8, borderBottom: '1px solid #f0f0f0' }}>
+        <Text strong>{t('nav.notifications')}</Text>
         {unreadCount > 0 && (
-          <Button type="link" size="small" onClick={handleMarkAllRead} style={{ padding: 0 }}>
+          <Button type="link" size="small" onClick={handleMarkAllRead} style={{ padding: 0, color: '#3E5902' }}>
             {t('nav.markAllRead')}
           </Button>
         )}
       </div>
-
       <div style={{ overflowY: 'auto', flex: 1 }}>
         {notifications.length === 0 ? (
-          <div style={{ textAlign: 'center', padding: '24px 0', color: '#8c8c8c' }}>
-            {t('notifications.noNotifications')}
+          <div style={{ textAlign: 'center', padding: '24px 0', color: '#999' }}>
+            {t('common.noData')}
           </div>
         ) : (
           <List
             size="small"
             dataSource={notifications}
-            renderItem={(item) => {
-              const isUnread = !item.is_read;
-              const isQualityIssue = item.type === 'kalite_sorunu';
-              const isAdminMsg = item.type === 'admin_mesaj';
-              const isAdminAlert = item.type === 'admin_uyari';
-
+            renderItem={item => {
+              const isRecall = item.type === 'recall';
+              const isQualityAlert = item.type === 'quality_alert';
               return (
                 <List.Item
-                  key={item.id}
-                  onClick={() => handleMarkRead(item)}
+                  onClick={() => handleNotificationClick(item)}
                   style={{
-                    padding: '10px 12px',
-                    borderRadius: 8,
-                    marginBottom: 6,
+                    padding: '8px 4px',
                     cursor: 'pointer',
-                    background: isUnread ? (isQualityIssue || isAdminAlert ? '#fff1f0' : isAdminMsg ? '#f9f0ff' : '#f0f5ff') : '#fafafa',
-                    border: `1px solid ${isUnread ? (isQualityIssue || isAdminAlert ? '#ffa39e' : isAdminMsg ? '#d3adf7' : '#adc6ff') : '#f0f0f0'}`,
-                    display: 'block',
+                    background: item.is_read ? 'transparent' : '#f6ffed',
+                    borderLeft: isRecall ? '3px solid #ff4d4f' : isQualityAlert ? '3px solid #fa8c16' : undefined,
                   }}
                 >
-                  <div style={{ display: 'flex', alignItems: 'flex-start', gap: 8 }}>
-                    {isQualityIssue ? (
-                      <WarningOutlined style={{ color: '#ff4d4f', fontSize: 16, marginTop: 2 }} />
-                    ) : isAdminAlert ? (
-                      <SafetyCertificateOutlined style={{ color: '#f5222d', fontSize: 16, marginTop: 2 }} />
-                    ) : isAdminMsg ? (
-                      <NotificationOutlined style={{ color: '#722ed1', fontSize: 16, marginTop: 2 }} />
-                    ) : item.type === 'satis' ? (
-                      <CheckCircleOutlined style={{ color: '#52c41a', fontSize: 16, marginTop: 2 }} />
-                    ) : item.type === 'siparis' ? (
-                      <ShoppingCartOutlined style={{ color: '#1890ff', fontSize: 16, marginTop: 2 }} />
-                    ) : (
-                      <BellOutlined style={{ color: '#faad14', fontSize: 16, marginTop: 2 }} />
-                    )}
-
-                    <div style={{ flex: 1 }}>
-                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                        <Text strong style={{ fontSize: 13, color: isQualityIssue || isAdminAlert ? '#cf1322' : undefined }}>
-                          {item.title}
-                        </Text>
-                        <Space size={4}>
-                          {isAdminMsg && <Tag color="purple" style={{ fontSize: 10, lineHeight: '16px' }}>Yönetici Mesajı</Tag>}
-                          {isAdminAlert && <Tag color="red" style={{ fontSize: 10, lineHeight: '16px' }}>Yönetici Uyarısı</Tag>}
-                          {isUnread && <Tag color={isQualityIssue || isAdminAlert ? 'error' : 'processing'} style={{ fontSize: 10, lineHeight: '16px' }}>{t('notifications.new')}</Tag>}
-                        </Space>
-                      </div>
-
-                      <Text style={{ fontSize: 12, display: 'block', margin: '4px 0', color: '#595959' }}>
-                        {item.message}
+                  <div style={{ width: '100%' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <Text strong={!item.is_read} style={{ fontSize: 13, color: isRecall ? '#ff4d4f' : undefined }}>
+                        {item.title}
                       </Text>
-
-                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 4 }}>
-                        <Text type="secondary" style={{ fontSize: 11 }}>
-                          {dayjs(item.created_at).format('DD.MM.YYYY HH:mm')}
-                        </Text>
-
-                        {isQualityIssue && (
-                          <Space size="small">
-                            {item.reference_id && (
-                              <Button
-                                size="small"
-                                type="link"
-                                style={{ padding: 0, fontSize: 11 }}
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  setPopoverOpen(false);
-                                  navigate(`/lots/${item.reference_id}/trace`);
-                                }}
-                              >
-                                {t('lots.traceForward')}
-                              </Button>
-                            )}
-                            <Button
-                              size="small"
-                              type="link"
-                              danger
-                              style={{ padding: 0, fontSize: 11 }}
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                setPopoverOpen(false);
-                                navigate('/recalls');
-                              }}
-                            >
-                              {t('recalls.startRecall')}
-                            </Button>
-                          </Space>
-                        )}
-                      </div>
+                      {!item.is_read && <Badge status="processing" color="#3E5902" />}
                     </div>
+                    <Text type="secondary" style={{ fontSize: 12, display: 'block', marginTop: 2 }}>
+                      {item.message}
+                    </Text>
                   </div>
                 </List.Item>
               );
@@ -208,90 +161,126 @@ export default function MainLayout() {
     </div>
   );
 
+  const isDashboard = location.pathname === '/';
+
   return (
-    <Layout style={{ minHeight: '100vh' }}>
-      <Sider width={240} theme="dark" collapsible>
-        <div style={{ padding: '16px', textAlign: 'center', borderBottom: '1px solid #1f1f1f' }}>
-          <Text strong style={{ color: '#fff', fontSize: 18 }}>🐄 AVATAR</Text>
-          <br />
-          <Text style={{ color: roleColors[user?.role || ''], fontSize: 12 }}>
+    <Layout style={{
+      minHeight: '100vh',
+      background: 'transparent',
+    }}>
+      {/* Üst Gezinme Çubuğu (Header) */}
+      <Header
+        style={{
+          background: isDashboard ? 'transparent' : 'rgba(255, 255, 255, 0.90)',
+          backdropFilter: 'blur(8px)',
+          padding: '0 24px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          boxShadow: '0 1px 6px rgba(0,0,0,0.06)',
+          position: 'sticky',
+          top: 0,
+          zIndex: 1000,
+          borderBottom: '1px solid #E5E7EB',
+          height: 64,
+        }}
+      >
+        {/* Sol Logo ve Dashboard Butonu */}
+        <Space size="middle" align="center">
+          <div
+            onClick={() => navigate('/')}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: 10,
+              cursor: 'pointer',
+              userSelect: 'none',
+            }}
+          >
+            <img src="/logo.png" alt="KasApp Logo" style={{ width: 38, height: 38, objectFit: "contain" }} />
+            <div>
+              <Text strong style={{ fontSize: 20, color: '#274001', letterSpacing: -0.5, lineHeight: 1 }}>
+                KasApp
+              </Text>
+            </div>
+          </div>
+
+          <Tag
+            color="#3E5902"
+            style={{
+              borderRadius: 6,
+              fontWeight: 600,
+              fontSize: 12,
+              padding: '2px 8px',
+              marginLeft: 4,
+            }}
+          >
             {t(`roles.${user?.role || 'hayvanci'}`)}
-          </Text>
-        </div>
-        <Menu
-          theme="dark"
-          mode="inline"
-          selectedKeys={[location.pathname]}
-          items={menuItems}
-          onClick={({ key }) => navigate(key)}
-        />
-      </Sider>
-      <Layout>
-        <Header style={{ background: '#fff', padding: '0 24px', display: 'flex', alignItems: 'center', justifyContent: 'flex-end', boxShadow: '0 1px 4px rgba(0,21,41,.08)' }}>
-          <Space size="large">
-            <LanguageSwitcher />
-            <Popover
-              content={notificationContent}
-              trigger="click"
-              placement="bottomRight"
-              open={popoverOpen}
-              onOpenChange={setPopoverOpen}
+          </Tag>
+
+          {!isDashboard && (
+            <Button
+              type="primary"
+              ghost
+              icon={<ArrowLeftOutlined />}
+              onClick={() => navigate('/')}
+              style={{
+                borderRadius: 8,
+                fontWeight: 600,
+                color: '#3E5902',
+                borderColor: '#3E5902',
+                marginLeft: 8,
+              }}
             >
-              <Badge count={unreadCount} overflowCount={99}>
-                <BellOutlined style={{ fontSize: 18, cursor: 'pointer', color: unreadCount > 0 ? '#ff4d4f' : '#595959' }} />
-              </Badge>
-            </Popover>
-            <Dropdown menu={{ items: userMenu }} placement="bottomRight">
-              <Space style={{ cursor: 'pointer' }}>
-                <Avatar icon={<UserOutlined />} style={{ backgroundColor: roleColors[user?.role || ''] }} />
-                <Text>{user?.name}</Text>
-              </Space>
-            </Dropdown>
-          </Space>
-        </Header>
-        <Content style={{ margin: '24px', padding: '24px', background: '#fff', borderRadius: '8px', minHeight: 280 }}>
-          <Outlet />
-        </Content>
-      </Layout>
+              Dashboard'a Dön
+            </Button>
+          )}
+        </Space>
+
+        {/* Sağ Kullanıcı Araçları */}
+        <Space size="large" align="center">
+          <LanguageSwitcher />
+
+          <Popover
+            content={notificationContent}
+            trigger="click"
+            placement="bottomRight"
+            open={popoverOpen}
+            onOpenChange={setPopoverOpen}
+          >
+            <Badge count={unreadCount} overflowCount={99}>
+              <BellOutlined style={{ fontSize: 20, cursor: 'pointer', color: unreadCount > 0 ? '#ff4d4f' : '#274001' }} />
+            </Badge>
+          </Popover>
+
+          <Dropdown menu={{ items: userMenu }} placement="bottomRight" arrow>
+            <Space style={{ cursor: 'pointer' }} align="center">
+              <Avatar
+                icon={<UserOutlined />}
+                style={{ backgroundColor: roleColors[user?.role || ''] || '#3E5902' }}
+              />
+              <Text strong style={{ color: '#274001' }}>{user?.name || user?.email}</Text>
+            </Space>
+          </Dropdown>
+        </Space>
+      </Header>
+
+      {/* Sayfa İçeriği */}
+      <Content
+        style={{
+          margin: '20px auto',
+          padding: '24px',
+          background: isDashboard ? 'transparent' : 'rgba(255, 255, 255, 0.82)',
+          backdropFilter: isDashboard ? 'none' : 'blur(8px)',
+          borderRadius: 14,
+          maxWidth: 1440,
+          width: 'calc(100% - 40px)',
+          minHeight: 'calc(100vh - 104px)',
+          boxShadow: isDashboard ? 'none' : '0 4px 20px rgba(0,0,0,0.05)',
+        }}
+      >
+        <Outlet />
+      </Content>
     </Layout>
   );
-}
-
-function getMenuItems(role: string, t: (key: string) => string) {
-  const dashboard = [
-    { key: '/', icon: <DashboardOutlined />, label: t('nav.dashboard') },
-  ];
-
-  const hayvanci = [
-    { key: '/butchery',          icon: <ScissorOutlined />,       label: t('nav.butchery') },
-    { key: '/raw-materials',     icon: <InboxOutlined />,         label: t('nav.rawMaterials') },
-    { key: '/producer-listings', icon: <UnorderedListOutlined />, label: t('nav.producerListings') },
-    { key: '/orders',            icon: <ShoppingCartOutlined />,  label: t('nav.orders') },
-    { key: '/farmer-listings',   icon: <TagsOutlined />,          label: t('nav.farmerListings') },
-    { key: '/sales',             icon: <DollarCircleOutlined />,  label: t('nav.sales') },
-    { key: '/lots',              icon: <AuditOutlined />,         label: t('nav.lots') },
-    { key: '/recalls',           icon: <WarningOutlined />,       label: t('nav.recalls') },
-  ];
-
-  const sucukcu = [
-    { key: '/producer-listings-manage', icon: <TagsOutlined />,          label: t('nav.farmerListings') },
-    { key: '/producer-orders',          icon: <ShoppingCartOutlined />,  label: t('nav.producerOrders') },
-    { key: '/production',               icon: <ForkOutlined />,          label: t('nav.production') },
-  ];
-
-  const market = [
-    { key: '/market-listings', icon: <UnorderedListOutlined />, label: t('nav.marketListings') },
-    { key: '/purchases',       icon: <ShoppingCartOutlined />,  label: t('nav.purchases') },
-  ];
-
-  const admin = [
-    { key: '/admin/users', icon: <TeamOutlined />, label: t('nav.adminUsers') || 'Kullanıcı Yönetimi' },
-  ];
-
-  const roleMenus: Record<string, typeof dashboard> = { hayvanci, sucukcu, market, admin };
-  const common = [
-    { key: '/invoices', icon: <FileTextOutlined />, label: t('nav.invoices') },
-    { key: '/reports',  icon: <BarChartOutlined />, label: t('nav.reports') },
-  ];
-  return [...dashboard, ...(roleMenus[role] || []), ...common];
 }

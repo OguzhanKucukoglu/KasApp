@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <style name="Theme.AvatarApp" parent="android:Theme.Material.Light.NoActionBar">
-        <item name="android:statusBarColor">#1A365D</item>
+        <item name="android:statusBarColor">#F8F8F6</item>
+        <item name="android:windowBackground">#F8F8F6</item>
+        <item name="android:windowSplashScreenBackground">#F8F8F6</item>
+        <item name="android:windowSplashScreenAnimatedIcon">@android:color/transparent</item>
+        <item name="android:windowSplashScreenIconBackgroundColor">@android:color/transparent</item>
+        <item name="android:windowDisablePreview">true</item>
+        <item name="android:windowLightStatusBar">true</item>
     </style>
 </resources>
