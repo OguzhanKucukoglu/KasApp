@@ -87,7 +87,12 @@ fun InvoicesScreen(
  }
  }
  },
- colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.surface)
+ actions = {
+                    IconButton(onClick = { viewModel.loadInvoices() }) {
+                        Icon(Icons.Default.Refresh, contentDescription = "Yenile")
+                    }
+                },
+                colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.surface)
  )
  }
  ) { padding ->

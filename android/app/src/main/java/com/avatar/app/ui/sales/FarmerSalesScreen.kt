@@ -93,7 +93,12 @@ fun FarmerSalesScreen(
  Text("Marketlerin satın aldığı ürünler ve şikayet bildirimleri", fontSize = 11.sp, color = Color.Gray)
  }
  },
- colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.surface)
+ actions = {
+                    IconButton(onClick = { viewModel.loadData() }) {
+                        Icon(Icons.Default.Refresh, contentDescription = "Yenile")
+                    }
+                },
+                colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.surface)
  )
  }
  ) { padding ->
@@ -208,6 +213,7 @@ fun FarmerSalesScreen(
  fontWeight = FontWeight.Bold,
  color = Color.DarkGray
  )
+		}
  
 
         // İçerik
@@ -280,7 +286,6 @@ fun FarmerSalesScreen(
  recallLotTarget = Pair(complaint.lotId, complaint.lotNumber)
  }
  )
- }
  }
  }
  }

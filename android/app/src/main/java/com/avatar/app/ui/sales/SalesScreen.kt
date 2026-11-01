@@ -114,7 +114,12 @@ fun SalesScreen(
  )
  }
  },
- colors = TopAppBarDefaults.topAppBarColors(containerColor = PrimaryBlue)
+ actions = {
+                    IconButton(onClick = { viewModel.loadLots() }) {
+                        Icon(Icons.Default.Refresh, contentDescription = "Yenile")
+                    }
+                },
+                colors = TopAppBarDefaults.topAppBarColors(containerColor = PrimaryBlue)
  )
  }
  ) { padding ->

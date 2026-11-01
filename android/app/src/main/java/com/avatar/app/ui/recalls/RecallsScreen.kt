@@ -73,7 +73,12 @@ fun RecallsScreen(
  Text("Mikrobiyolojik ve kalite blokajları yönetimi", fontSize = 11.sp, color = Color.Gray)
  }
  },
- colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.surface)
+ actions = {
+                    IconButton(onClick = { viewModel.loadData() }) {
+                        Icon(Icons.Default.Refresh, contentDescription = "Yenile")
+                    }
+                },
+                colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.surface)
  )
  },
  floatingActionButton = {

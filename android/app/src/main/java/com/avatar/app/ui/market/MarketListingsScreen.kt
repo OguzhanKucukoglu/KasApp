@@ -75,7 +75,11 @@ fun MarketListingsScreen(
  Text("İşletmelerin satışa sunduğu mamul ilanları", fontSize = 11.sp, color = Color.Gray)
  }
  },
- )
+                actions = {
+                    IconButton(onClick = { viewModel.loadListings() }) {
+                        Icon(Icons.Default.Refresh, contentDescription = "Yenile")
+                    }
+                })
  }
  ) { padding ->
 		Column(

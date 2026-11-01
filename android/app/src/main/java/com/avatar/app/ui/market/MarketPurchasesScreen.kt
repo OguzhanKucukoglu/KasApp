@@ -94,7 +94,11 @@ fun MarketPurchasesScreen(
  Text("Marketinizin mamul alımları ve faturaları", fontSize = 11.sp, color = Color.Gray)
  }
  },
- )
+                actions = {
+                    IconButton(onClick = { viewModel.loadPurchases() }) {
+                        Icon(Icons.Default.Refresh, contentDescription = "Yenile")
+                    }
+                })
  }
  ) { padding ->
 		Column(

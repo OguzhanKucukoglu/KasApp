@@ -80,7 +80,12 @@ fun LotsScreen(
  )
  }
  },
- colors = TopAppBarDefaults.topAppBarColors(
+ actions = {
+                    IconButton(onClick = { viewModel.loadLots() }) {
+                        Icon(Icons.Default.Refresh, contentDescription = "Yenile")
+                    }
+                },
+                colors = TopAppBarDefaults.topAppBarColors(
  containerColor = MaterialTheme.colorScheme.surface
  )
  )

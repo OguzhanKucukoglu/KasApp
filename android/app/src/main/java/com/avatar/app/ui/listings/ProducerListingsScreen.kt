@@ -80,7 +80,12 @@ fun ProducerListingsScreen(
  )
  }
  },
- colors = TopAppBarDefaults.topAppBarColors(
+ actions = {
+                    IconButton(onClick = { viewModel.loadData() }) {
+                        Icon(Icons.Default.Refresh, contentDescription = "Yenile")
+                    }
+                },
+                colors = TopAppBarDefaults.topAppBarColors(
  containerColor = MaterialTheme.colorScheme.surface
  )
  )

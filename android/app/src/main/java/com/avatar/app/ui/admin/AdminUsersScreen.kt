@@ -79,15 +79,22 @@ fun AdminUsersScreen(
  }
  },
  actions = {
- IconButton(onClick = onOpenNotifications) {
- Icon(
- Icons.Default.Notifications,
- contentDescription = "Bildirimler",
- tint = Color.White
- )
- }
- },
- colors = TopAppBarDefaults.topAppBarColors(containerColor = PrimaryBlue)
+                    IconButton(onClick = onOpenNotifications) {
+                        Icon(
+                            Icons.Default.Notifications,
+                            contentDescription = "Bildirimler",
+                            tint = Color.White
+                        )
+                    }
+                    IconButton(onClick = { viewModel.loadUsers() }) {
+                        Icon(
+                            Icons.Default.Refresh,
+                            contentDescription = "Yenile",
+                            tint = Color.White
+                        )
+                    }
+                },
+                colors = TopAppBarDefaults.topAppBarColors(containerColor = PrimaryBlue)
  )
  }
  ) { padding ->
